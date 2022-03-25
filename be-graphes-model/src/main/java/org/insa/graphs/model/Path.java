@@ -35,7 +35,35 @@ public class Path {
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        double travelTimeMin = 100000;
+        Arc fastestArc = null;
+        boolean found = false;
+
+        for (int i = 0; i < nodes.size()-1; i++)
+        {
+            for (Arc a : nodes.get(i).getSuccessors())
+            {
+                if (a.getDestination() == nodes.get(i+1) && a.getMinimumTravelTime()< travelTimeMin)
+                {
+                    found = true;
+                    fastestArc = a;
+                }
+            }
+            if (!found)
+            {
+
+                throw new IllegalArgumentException("two consecutive nodes in the list are not connected in the graph !");
+            }
+            else
+            {
+                arcs.add(fastestArc);
+                found = false;
+            }
+        }
+        if (nodes.size()==1)
+        {
+            return(new Path(graph, nodes.get(0)));
+        }
         return new Path(graph, arcs);
     }
 
@@ -56,7 +84,35 @@ public class Path {
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
+        double distMin = 100000;
+        Arc shortestArc = null;
+        boolean found = false;
+
+        for (int i = 0; i < nodes.size()-1; i++)
+        {
+            for (Arc a : nodes.get(i).getSuccessors())
+            {
+                if (a.getDestination() == nodes.get(i+1) && a.getLength() < distMin)
+                {
+                    found = true;
+                    shortestArc = a;
+                }
+            }
+            if (!found)
+            {
+
+                throw new IllegalArgumentException("two consecutive nodes in the list are not connected in the graph !");
+            }
+            else
+            {
+                arcs.add(shortestArc);
+                found = false;
+            }
+        }
+        if (nodes.size()==1)
+        {
+            return(new Path(graph, nodes.get(0)));
+        }
         return new Path(graph, arcs);
     }
 
@@ -201,8 +257,25 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public boolean isValid() {
-        // TODO:
-        return false;
+        boolean result = false;
+        List<Arc> arcList = this.getArcs();
+        if (this.isEmpty()) {
+            result = true;
+        }
+        else if (arcList.isEmpty()) {
+            result = true;
+        }
+        else {
+            if (arcList.get(0).getOrigin() == this.getOrigin()) {
+                for (int i = 0; i<arcList.size()-1;i++) {
+                        if (!(arcList.get(i).getDestination() == arcList.get(i + 1).getOrigin())) {
+                            return false;
+                        }
+                    }
+                }
+                result = true;
+            }
+        return result;
     }
 
     /**
@@ -213,8 +286,14 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public float getLength() {
-        // TODO:
-        return 0;
+        List<Arc> arcs = this.getArcs();
+        float distance = 0;
+        for (Arc a : arcs)
+        {
+            distance+=a.getLength();
+
+        }
+        return (distance);
     }
 
     /**
@@ -228,8 +307,7 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public double getTravelTime(double speed) {
-        // TODO:
-        return 0;
+        return((this.getLength()/1000)/(speed/3600));
     }
 
     /**
@@ -241,8 +319,13 @@ public class Path {
      * @deprecated Need to be implemented.
      */
     public double getMinimumTravelTime() {
-        // TODO:
-        return 0;
+        List<Arc> arcs = this.getArcs();
+        double time = 0;
+        for (Arc a : arcs)
+        {
+            time+=a.getMinimumTravelTime();
+        }
+        return(time);
     }
 
 }
