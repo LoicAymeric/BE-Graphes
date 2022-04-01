@@ -35,23 +35,26 @@ public class Path {
     public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        double travelTimeMin = 100000;
+        double travelTimeMin;
         Arc fastestArc = null;
         boolean found = false;
 
         for (int i = 0; i < nodes.size()-1; i++)
         {
+            travelTimeMin = 100000;
             for (Arc a : nodes.get(i).getSuccessors())
+            //parmis tous les succcesseurs d'un node on trouve l'arc qui va bien au prochain et le plus rapide
             {
                 if (a.getDestination() == nodes.get(i+1) && a.getMinimumTravelTime()< travelTimeMin)
                 {
                     found = true;
                     fastestArc = a;
+                    travelTimeMin = a.getMinimumTravelTime();
                 }
             }
             if (!found)
             {
-
+                //si deux nodes ne sont pas reliés
                 throw new IllegalArgumentException("two consecutive nodes in the list are not connected in the graph !");
             }
             else
@@ -62,9 +65,11 @@ public class Path {
         }
         if (nodes.size()==1)
         {
+            //cas où il n'y a qu'un seul sommet
             return(new Path(graph, nodes.get(0)));
         }
-        return new Path(graph, arcs);
+        Path p = new Path(graph, arcs);
+        return p;
     }
 
     /**
@@ -84,23 +89,26 @@ public class Path {
     public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
             throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        double distMin = 100000;
+        double distMin;
         Arc shortestArc = null;
         boolean found = false;
 
-        for (int i = 0; i < nodes.size()-1; i++)
+        for (int i = 0; i < nodes.size()-1; i++)  //On parcours tous les nodes donnés
         {
+            distMin = 100000;
             for (Arc a : nodes.get(i).getSuccessors())
+            //parmis tous les succcesseurs d'un node on trouve l'arc qui va bien au prochain et le plus court
             {
                 if (a.getDestination() == nodes.get(i+1) && a.getLength() < distMin)
                 {
                     found = true;
                     shortestArc = a;
+                    distMin = a.getLength();
                 }
             }
             if (!found)
             {
-
+                // si deux nodes ne sont pas reliés
                 throw new IllegalArgumentException("two consecutive nodes in the list are not connected in the graph !");
             }
             else
@@ -111,6 +119,7 @@ public class Path {
         }
         if (nodes.size()==1)
         {
+            //cas où il n'y a qu'un seul sommet
             return(new Path(graph, nodes.get(0)));
         }
         return new Path(graph, arcs);
