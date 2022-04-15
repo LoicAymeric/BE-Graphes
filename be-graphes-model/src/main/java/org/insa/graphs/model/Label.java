@@ -14,7 +14,7 @@ public class Label implements Comparable<Label> {
     {
         this.currentNode = n;
         this.mark = false;
-        this.cost = 99999999;
+        this.cost = 9999999;
         this.fatherPath = null;
     }
 
