@@ -145,15 +145,15 @@ public class BinaryHeap<E extends Comparable<E>> implements PriorityQueue<E> {
         int i = this.array.indexOf(x);
         if (i == -1 || i >= this.currentSize)
         {
-            System.out.println(i);
             throw new ElementNotFoundException(x);
         }
         this.arraySet(i, this.array.get(this.currentSize-1));
-        this.currentSize --;
+        this.currentSize--;
         E val = this.array.get(i);
-        this.percolateUp(i);
-        this.percolateDown(this.array.indexOf(val));
-
+        if (i < this.currentSize) {
+            this.percolateUp(i);
+            this.percolateDown(this.array.indexOf(val));
+        }
     }
 
     @Override

@@ -57,12 +57,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         //Iterations
         Label x;
         boolean markedEnd = false;
-        System.out.println(tabLabel[92968].getCost());
+
         while (!this.AllMarked(tabLabel) && !labelHeap.isEmpty() && !markedEnd)
         {
 
-            x = labelHeap.findMin();
-            labelHeap.deleteMin();
+            x = labelHeap.deleteMin();
             tabLabel[x.getCurrentNode().getId()].setMark(true);
             notifyNodeMarked(x.getCurrentNode());
 

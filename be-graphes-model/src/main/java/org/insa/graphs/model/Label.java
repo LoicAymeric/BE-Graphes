@@ -43,4 +43,6 @@ public class Label implements Comparable<Label> {
     }
 
     public Node getCurrentNode() {return this.currentNode;}
+
+    public String toString() {return (""+this.currentNode.getId());}
 }
