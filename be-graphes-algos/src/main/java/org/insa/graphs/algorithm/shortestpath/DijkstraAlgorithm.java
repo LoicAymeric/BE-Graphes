@@ -40,6 +40,10 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         ShortestPathSolution solution = null;
         Node start = data.getOrigin();
         Node end = data.getDestination();
+        if (start.getId() == end.getId())
+        {
+            return new ShortestPathSolution(data, AbstractSolution.Status.INFEASIBLE);
+        }
 
         notifyOriginProcessed(start);
 
