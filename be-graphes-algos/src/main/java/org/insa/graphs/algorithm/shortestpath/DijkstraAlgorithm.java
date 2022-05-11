@@ -18,7 +18,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
         super(data);
     }
 
-    private boolean AllMarked(Label[] tabLabel) //return true s'il sont tous marqués
+   private boolean AllMarked(Label[] tabLabel) //return true s'il sont tous marqués
     {
         boolean state = true;
         int i = 0;

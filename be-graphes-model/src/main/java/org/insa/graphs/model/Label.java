@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Label implements Comparable<Label> {
     private Node currentNode;
     private boolean mark;
-    private double cost;
+    protected double cost;
     private Arc fatherPath;
 
 
@@ -31,10 +31,10 @@ public class Label implements Comparable<Label> {
     public void setCost(double cost) {this.cost = cost;}
 
     public boolean equals(Label other) {
-        return (other.cost == this.cost);
+        return (other.getTotalCost() == this.getTotalCost());
     }
 
-    public int compareTo(Label other){return (Double.compare(this.cost, other.cost));}
+    public int compareTo(Label other){return (Double.compare(this.getTotalCost(), other.getTotalCost()));}
 
     public void setMark(boolean b) { this.mark = b; }
 
@@ -43,6 +43,8 @@ public class Label implements Comparable<Label> {
     }
 
     public Node getCurrentNode() {return this.currentNode;}
+
+    public double getTotalCost() {return this.cost;};
 
     public String toString() {return (""+this.currentNode.getId());}
 }
