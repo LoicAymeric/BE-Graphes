@@ -47,11 +47,10 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         //init
         for (Node n : data.getGraph().getNodes())
         {
-            if (data.getMode()== AbstractInputData.Mode.LENGTH) {
+            if (data.getMode()== AbstractInputData.Mode.LENGTH)
                 tabLabel[n.getId()] = new LabelStar(n, n.getPoint().distanceTo(end.getPoint()));
-            }
             else
-                tabLabel[n.getId()] = new LabelStar(n, n.getPoint().distanceTo(end.getPoint())/data.getGraph().getGraphInformation().getMaximumSpeed());
+                tabLabel[n.getId()] = new LabelStar(n, 3.6*(n.getPoint().distanceTo(end.getPoint()))/data.getGraph().getGraphInformation().getMaximumSpeed());
 
         }
 
