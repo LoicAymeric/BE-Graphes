@@ -1,6 +1,8 @@
 package org.insa.graphs.model;
 
+
 import java.util.ArrayList;
+
 
 public class Label implements Comparable<Label> {
     private Node currentNode;

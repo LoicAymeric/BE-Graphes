@@ -47,7 +47,12 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         //init
         for (Node n : data.getGraph().getNodes())
         {
-            tabLabel[n.getId()] = new LabelStar(n, end);
+            if (data.getMode()== AbstractInputData.Mode.LENGTH) {
+                tabLabel[n.getId()] = new LabelStar(n, n.getPoint().distanceTo(end.getPoint()));
+            }
+            else
+                tabLabel[n.getId()] = new LabelStar(n, n.getPoint().distanceTo(end.getPoint())/data.getGraph().getGraphInformation().getMaximumSpeed());
+
         }
 
         tabLabel[start.getId()].setCost(0);
@@ -75,7 +80,8 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
                     LabelStar yLabel = tabLabel[y.getDestination().getId()];
                     if (!yLabel.getMark()) {
                         double previousCost = yLabel.getCost();
-                        yLabel.setCost(Double.min(yLabel.getTotalCost(), x.getCost() + data.getCost(y)));
+
+                        yLabel.setCost(Double.min(yLabel.getCost(), x.getCost() + data.getCost(y)));
                         if (previousCost != yLabel.getCost()) { //si le coût min de y a changé
                             if (previousCost != 9999999)
                             {
