@@ -33,6 +33,9 @@ public class Launch {
      * 
      * @throws Exception if something wrong happens when creating the graph.
      */
+    static int nbTests;
+    static int nbSuccess;
+
     public static Drawing createDrawing() throws Exception {
         BasicDrawing basicDrawing = new BasicDrawing();
         SwingUtilities.invokeAndWait(new Runnable() {
@@ -78,10 +81,17 @@ public class Launch {
 
         // TODO: Draw the path.
         drawing.drawPath(path, Color.red);*/
+
+        nbTests = 0;
+        nbSuccess = 0;
+
         testInexistant();
         testNull();
         testCourt();
         testLong();
+
+        System.out.println("\nTests valides : " + nbSuccess + " sur " + nbTests);
+        System.out.println("\n###################");
     }
     public static boolean test(ShortestPathAlgorithm algo) throws IOException {
 
@@ -145,128 +155,184 @@ public class Launch {
     public static void testInexistant() throws IOException {
         //insa 608 1282
         //mode route et length (1)
-        System.out.println("Début du test de chemin inexistant...");
-        System.out.println("--- Dijkstra ----");
-        boolean etat = test(new DijkstraAlgorithm(initData("../map/insa.mapgr", 608, 1282, 1)));
+        System.out.println("### DEBUT DES TEST ###");
+        System.out.println("\nChemin inexistant");
+        nbTests++;
+        boolean etat = test(new DijkstraAlgorithm(initData("map/insa.mapgr", 608, 1282, 1)));
         if (etat)
         {
-            System.out.println("Réussite du test !");
+            System.out.println("\t[Dijkstra] OK");
+            nbSuccess++;
         }
         else
         {
-            System.out.println("Echec du test");
+            System.out.println("\t[Dijkstra] ECHEC");
         }
 
-        System.out.println("--- Astar ----");
-        etat = test(new AStarAlgorithm(initData("../map/insa.mapgr", 608, 1282, 1)));
+        nbTests++;
+        etat = test(new AStarAlgorithm(initData("map/insa.mapgr", 608, 1282, 1)));
         if (etat)
         {
-            System.out.println("Réussite du test !");
+            System.out.println("\t[A*] OK");
+            nbSuccess++;
         }
         else
         {
-            System.out.println("Echec du test");
+            System.out.println("\t[A*] ECHEC");
         }
     }
 
     public  static  void testNull() throws IOException {
-        System.out.println("Début du test de chemin null...");
-        System.out.println("--- Dijkstra ----");
-        boolean etat = test(new DijkstraAlgorithm(initData("../map/insa.mapgr", 608,608, 0)));
+        System.out.println("\nChemin nul");
+        nbTests++;
+        boolean etat = test(new DijkstraAlgorithm(initData("map/insa.mapgr", 608,608, 0)));
         if (etat)
         {
-            System.out.println("Réussite du test !");
+            System.out.println("\t[Dijkstra] OK");
+            nbSuccess++;
         }
         else
         {
-            System.out.println("Echec du test");
+            System.out.println("\t[Dijkstra] ECHEC");
         }
 
-        System.out.println("--- Astar ----");
-        etat = test(new AStarAlgorithm(initData("../map/insa.mapgr", 608,608, 0)));
+        nbTests++;
+        etat = test(new AStarAlgorithm(initData("map/insa.mapgr", 608,608, 0)));
         if (etat)
         {
-            System.out.println("Réussite du test !");
+            System.out.println("\t[A*] OK");
+            nbSuccess++;
         }
         else
         {
-            System.out.println("Echec du test");
+            System.out.println("\t[A*] ECHEC");
         }
     }
     public  static  void testCourt() throws IOException {
-        boolean etat1 = true;
-        boolean etat2, etat3;
-        System.out.println("Début des tests de chemin court");
-        for (int i =0; i<10; i++)
-        {
-            System.out.println("test n°"+i);
-            int r1 = (int)(random()*1000);
-            int r2 = (int)(random()*1000);
-            int mode = (int)(random()*3);
-            etat2 = test(new DijkstraAlgorithm(initData("../map/insa.mapgr", r1, r2, mode)));
-            etat3 = test(new AStarAlgorithm(initData("../map/insa.mapgr", r1, r2, mode)));
-            etat1 = etat1 && etat2 && etat3;
-            if (!etat2)
-            {
-                System.out.println("Erreur  en dijkstra pour les points :"+r1 + " et " +r2);
-            }
-            if (!etat3)
-            {
-                System.out.println(mode);
-                System.out.println("Erreur  en Astar pour les points :"+r1 + " et " +r2);
+        boolean etat1, etat2;
+        String modeStr = "";
+        System.out.println("\nChemins courts");
+        for (int i =0; i<10; i++) {
+
+            int r1 = (int) (random() * 1000);
+            int r2 = (int) (random() * 1000);
+
+            int mode = (int) (random() * 5);
+            switch (mode) {
+                case 0:
+                    modeStr = "Shortest all";
+                    break;
+                case 1:
+                    modeStr = "Shortest cars";
+                    break;
+                case 2:
+                    modeStr = "Fastest all";
+                    break;
+                case 3:
+                    modeStr = "Fastest cars";
+                    break;
+                case 4:
+                    modeStr = "Fastest pedestrians";
+                    break;
             }
 
-        }
-        if (etat1)
-        {
-            System.out.println("Réussite des test !");
-        }
-        else
-        {
-            System.out.println("Echec des test");
+            nbTests+=2;
+            etat1 = test(new DijkstraAlgorithm(initData("map/insa.mapgr", r1, r2, mode)));
+            etat2 = test(new AStarAlgorithm(initData("map/insa.mapgr", r1, r2, mode)));
+
+            System.out.println("\tTest " + i + " (" + r1 + " -> " + r2 + ", " + modeStr + ")");
+
+            if (etat1) {
+                System.out.println("\t\t[Dijkstra] OK");
+                nbSuccess++;
+            }
+            else {
+                System.out.println("\t\t[Dijkstra] ECHEC");
+            }
+
+            if (etat2) {
+                System.out.println("\t\t[A*] OK\n");
+                nbSuccess++;
+            }
+            else {
+                System.out.println("\t\t[A*] ECHEC\n");
+            }
+
         }
 
     }
     public  static  void testLong() throws IOException {
-        boolean state = true;
-        System.out.println("Début des tests longs");
-        System.out.println("--- Dijkstra ---");
-        System.out.println("1er test");
-        state = state && testChemin(new DijkstraAlgorithm(initDataChemin("../map/fractal-spiral.mapgr",
-                        "../path/bl_spiral1.path", 0 )),"../path/bl_spiral1.path" );
-        System.out.println("2eme test");
-        state = state && testChemin(new DijkstraAlgorithm(initDataChemin("../map/fractal-spiral.mapgr",
-                "../path/bl_spiral2.path", 0 )),"../path/bl_spiral2.path" );
-        System.out.println("3eme test");
-        state = state && testChemin(new DijkstraAlgorithm(initDataChemin("../map/fractal-spiral.mapgr",
-                "../path/bl_spiral3.path", 0 )),"../path/bl_spiral3.path" );
-        if (state)
-        {
-            System.out.println("Réussite des tests de Dijkstra");
-        }
-        else
-        {
-            System.out.println("Echec des tests de Dijkstra");
-        }
+        boolean etat;
+        System.out.println("Tests longs");
 
-        System.out.println("--- Astar ---");
-        System.out.println("1er test");
-        state = state && testChemin(new AStarAlgorithm(initDataChemin("../map/fractal-spiral.mapgr",
-                "../path/bl_spiral1.path", 0 )),"../path/bl_spiral1.path" );
-        System.out.println("2eme test");
-        state = state && testChemin(new AStarAlgorithm(initDataChemin("../map/fractal-spiral.mapgr",
-                "../path/bl_spiral2.path", 0 )),"../path/bl_spiral2.path" );
-        System.out.println("3eme test");
-        state = state && testChemin(new AStarAlgorithm(initDataChemin("../map/fractal-spiral.mapgr",
-                "../path/bl_spiral3.path", 0 )),"../path/bl_spiral3.path" );
-        if (state)
-        {
-            System.out.println("Réussite des tests de Astar");
+
+
+        System.out.println("\tTest 1");
+        nbTests++;
+        etat = testChemin(new DijkstraAlgorithm(initDataChemin("map/fractal-spiral.mapgr",
+                        "path/bl_spiral1.path", 0 )),"path/bl_spiral1.path" );
+        if (etat) {
+            System.out.println("\t\t[Dijkstra] OK");
+            nbSuccess++;
         }
         else
-        {
-            System.out.println("Echec des tests de Astar");
+            System.out.println("\t\t[Dijkstra] ECHEC");
+
+        nbTests++;
+        etat = testChemin(new AStarAlgorithm(initDataChemin("map/fractal-spiral.mapgr",
+                "path/bl_spiral1.path", 0 )),"path/bl_spiral1.path" );
+        if (etat) {
+            System.out.println("\t\t[A*] OK");
+            nbSuccess++;
         }
+        else
+            System.out.println("\t\t[A*] ECHEC");
+
+
+
+        System.out.println("\tTest 2");
+        nbTests++;
+        etat = testChemin(new DijkstraAlgorithm(initDataChemin("map/fractal-spiral.mapgr",
+                "path/bl_spiral2.path", 0 )),"path/bl_spiral2.path" );
+        if (etat) {
+            System.out.println("\t\t[Dijkstra] OK");
+            nbSuccess++;
+        }
+        else
+            System.out.println("\t\t[Dijkstra] ECHEC");
+
+        nbTests++;
+        etat = testChemin(new AStarAlgorithm(initDataChemin("map/fractal-spiral.mapgr",
+                "path/bl_spiral2.path", 0 )),"path/bl_spiral2.path" );
+        if (etat) {
+            System.out.println("\t\t[A*] OK");
+            nbSuccess++;
+        }
+        else
+            System.out.println("\t\t[A*] ECHEC");
+
+
+
+        System.out.println("\tTest 3");
+        nbTests++;
+        etat = testChemin(new DijkstraAlgorithm(initDataChemin("map/fractal-spiral.mapgr",
+                "path/bl_spiral3.path", 0 )),"path/bl_spiral3.path" );
+        if (etat) {
+            System.out.println("\t\t[Dijkstra] OK");
+            nbSuccess++;
+        }
+        else
+            System.out.println("\t\t[Dijkstra] ECHEC");
+
+        nbTests++;
+        etat = testChemin(new AStarAlgorithm(initDataChemin("map/fractal-spiral.mapgr",
+                "path/bl_spiral3.path", 0 )),"path/bl_spiral3.path" );
+            if (etat) {
+                System.out.println("\t\t[A*] OK");
+                nbSuccess++;
+            }
+            else
+                System.out.println("\t\t[A*] ECHEC");
     }
 
 }
